@@ -36,11 +36,13 @@ class Car  # Not really a car but basically a car
   @grid = Array.new
   @facing = ''
   @directions = Array.new
+  @visited = Array.new
 
   def initialize
     @facing = 'north'
     @directions = ['north', 'east', 'south', 'west']
     @point = Point.new
+    @visited = []
   end
 
   def rotate(direction)
@@ -49,24 +51,41 @@ class Car  # Not really a car but basically a car
       when 'R' then @facing = @directions[(idx + 1) % 4]
       when 'L' then @facing = @directions[(idx - 1) % 4]
     end
-    puts "rotating #{direction} to face #{@facing}"
+    "rotating #{direction} to face #{@facing}"
   end
 
   def walk(distance)
-    old_point = @point.to_s
+    @visited.push(@point.dup)
     @point.send(@facing, distance)
-    puts "walking #{distance} blocks #{@facing} from #{old_point} to #{@point}"
+    "walking #{distance} blocks #{@facing} from #{@visited[-1]} to #{@point}"
+  end
+
+  def visited
+    @visited
+  end
+
+  def first_visited
+    seen = Hash.new
+    a = Array.new
+    @visited.each do |p|
+      if seen.has_key? p.to_s then
+         a.push(p)
+      end
+      seen[p.to_s] = true
+    end
+    return a
   end
 
   def move(str)
     /(?<direction>[RL])(?<distance>\d+)/ =~ str
     rotate(direction)
     walk(distance)
-    puts "you're now #{@point.blocks} away"
+    "you're now #{@point.blocks} blocks away"
   end
 end
 
 path_str = "R4, R4, L1, R3, L5, R2, R5, R1, L4, R3, L5, R2, L3, L4, L3, R1, R5, R1, L3, L1, R3, L1, R2, R2, L2, R5, L3, L4, R4, R4, R2, L4, L1, R5, L1, L4, R4, L1, R1, L2, R5, L2, L3, R2, R1, L194, R2, L4, R49, R1, R3, L5, L4, L1, R4, R2, R1, L5, R3, L5, L4, R4, R4, L2, L3, R78, L5, R4, R191, R4, R3, R1, L2, R1, R3, L1, R3, R4, R2, L2, R1, R4, L5, R2, L2, L4, L2, R1, R2, L3, R5, R2, L3, L3, R3, L1, L1, R5, L4, L4, L2, R5, R1, R4, L3, L5, L4, R5, L4, R5, R4, L3, L2, L5, R4, R3, L3, R1, L5, R5, R1, L3, R2, L5, R5, L3, R1, R4, L5, R4, R2, R3, L4, L5, R3, R4, L5, L5, R4, L4, L4, R1, R5, R3, L1, L4, L3, L4, R1, L5, L1, R2, R2, R4, R4, L5, R4, R1, L1, L1, L3, L5, L2, R4, L3, L5, L4, L1, R3"
+path_str = 'R8, R4, R4, R8'
 paths = path_str.split(', ')
 
 c = Car.new
