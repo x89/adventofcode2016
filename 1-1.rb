@@ -1,26 +1,44 @@
 class Point
   @x = Integer
   @y = Integer
+  @trail = Array.new
 
   def initialize
     @x = 0
     @y = 0
+    @trail = []
   end
 
   def north(d)
-    @y += d.to_i
+    d = d.to_i
+    @y.upto(@y+d-1) do |i|
+      @trail.push("#{@x}, #{i}")
+    end
+    @y += d
   end
 
   def east(d)
-    @x += d.to_i
+    d = d.to_i
+    @x.upto(@x+d-1) do |i|
+      @trail.push("#{i}, #{@y}")
+    end
+    @x += d
   end
 
   def south(d)
-    @y -= d.to_i
+    d = d.to_i
+    @y.downto(@y-d+1) do |i|
+      @trail.push("#{@x}, #{i}")
+    end
+    @y -= d
   end
 
   def west(d)
-    @x -= d.to_i
+    d = d.to_i
+    @x.downto(@x-d+1) do |i|
+      @trail.push("#{i}, #{@y}")
+    end
+    @x -= d
   end
 
   def to_s
@@ -29,6 +47,10 @@ class Point
 
   def blocks
     @x.abs + @y.abs
+  end
+
+  def get_trail
+    @trail
   end
 end
 
@@ -61,19 +83,18 @@ class Car  # Not really a car but basically a car
   end
 
   def visited
-    @visited
+    @point.get_trail
   end
 
   def first_visited
     seen = Hash.new
-    a = Array.new
-    @visited.each do |p|
-      if seen.has_key? p.to_s then
-         a.push(p)
+    @point.get_trail.each do |p|
+      if seen.include? p.to_s then
+        return p
       end
-      seen[p.to_s] = true
+      seen[p] = true
     end
-    return a
+    return 0
   end
 
   def move(str)
@@ -85,7 +106,6 @@ class Car  # Not really a car but basically a car
 end
 
 path_str = "R4, R4, L1, R3, L5, R2, R5, R1, L4, R3, L5, R2, L3, L4, L3, R1, R5, R1, L3, L1, R3, L1, R2, R2, L2, R5, L3, L4, R4, R4, R2, L4, L1, R5, L1, L4, R4, L1, R1, L2, R5, L2, L3, R2, R1, L194, R2, L4, R49, R1, R3, L5, L4, L1, R4, R2, R1, L5, R3, L5, L4, R4, R4, L2, L3, R78, L5, R4, R191, R4, R3, R1, L2, R1, R3, L1, R3, R4, R2, L2, R1, R4, L5, R2, L2, L4, L2, R1, R2, L3, R5, R2, L3, L3, R3, L1, L1, R5, L4, L4, L2, R5, R1, R4, L3, L5, L4, R5, L4, R5, R4, L3, L2, L5, R4, R3, L3, R1, L5, R5, R1, L3, R2, L5, R5, L3, R1, R4, L5, R4, R2, R3, L4, L5, R3, R4, L5, L5, R4, L4, L4, R1, R5, R3, L1, L4, L3, L4, R1, L5, L1, R2, R2, R4, R4, L5, R4, R1, L1, L1, L3, L5, L2, R4, L3, L5, L4, L1, R3"
-path_str = 'R8, R4, R4, R8'
 paths = path_str.split(', ')
 
 c = Car.new
