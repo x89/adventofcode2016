@@ -3,6 +3,8 @@ class Point
   @y = Integer
   @trail = Array.new
 
+  attr_reader :trail
+
   def initialize
     @x = 0
     @y = 0
@@ -48,10 +50,6 @@ class Point
   def blocks
     @x.abs + @y.abs
   end
-
-  def get_trail
-    @trail
-  end
 end
 
 class Car  # Not really a car but basically a car
@@ -83,12 +81,12 @@ class Car  # Not really a car but basically a car
   end
 
   def visited
-    @point.get_trail
+    @point.trail
   end
 
   def first_visited
     seen = Hash.new
-    @point.get_trail.each do |p|
+    @point.trail.each do |p|
       if seen.include? p.to_s then
         return p
       end
