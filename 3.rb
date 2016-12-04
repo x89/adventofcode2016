@@ -12,15 +12,7 @@ def possible(a)
     a[0] + a[2] > a[1],
     a[1] + a[2] > a[0]
   ].all?
-  #puts "#{a[0]} + #{a[1]} > #{a[2]} — #{a[0] + a[1] > a[2]}"
 end
-
-
-lines.reject! do |l|
-  not possible(l)
-end
-
-puts "Section 1 result: #{lines.count}"
 
 count = 0
 lines.transpose.each do |col|
@@ -29,4 +21,9 @@ lines.transpose.each do |col|
   end
 end
 
+lines.reject! do |l|
+  not possible(l)
+end
+
+puts "Section 1 result: #{lines.count}"
 puts "Section 2 answer: #{count}"
