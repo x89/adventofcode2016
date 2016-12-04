@@ -15,8 +15,18 @@ def possible(a)
   #puts "#{a[0]} + #{a[1]} > #{a[2]} — #{a[0] + a[1] > a[2]}"
 end
 
+
 lines.reject! do |l|
   not possible(l)
 end
 
-puts lines.count
+puts "Section 1 result: #{lines.count}"
+
+count = 0
+lines.transpose.each do |col|
+  while col != [] do
+    count += 1 if possible(col.slice!(0,3))
+  end
+end
+
+puts "Section 2 answer: #{count}"
