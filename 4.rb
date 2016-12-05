@@ -14,6 +14,12 @@ fh.readlines().each do |line|
 end
 fh.close()
 
+def caesar_cipher(string, shift = 1)
+  alphabet = Array('a'..'z')
+  encrypter = Hash[alphabet.zip(alphabet.rotate(shift))]
+  string.chars.map { |c| encrypter.fetch(c, " ") }
+end
+
 count = 0
 rooms.each do |r|
   char_count = Hash.new
@@ -26,9 +32,13 @@ rooms.each do |r|
     end
   end
   ck = String.new
-  char_count.sort_by{|k,v|-v}.to_a.each_with_index do |a,idx|
+  char_count.sort_by{|k,v|-v}.each_with_index do |a,idx|
     break if idx == 5
     ck += a[0]
   end
-  count += r[:num] if ck == r[:checksum]
+  if ck == r[:checksum] then
+    count += r[:num]
+    r[:reality_check] = true
+    puts "Santa's string: #{caesar_cipher(r[:roomstr], r[:num]).join}, id: #{r[:num]}"
+  end
 end
