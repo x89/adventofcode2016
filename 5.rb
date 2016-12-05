@@ -4,6 +4,14 @@ input = 'abbhdwsy'
 output = Array.new(8)
 output.fill(false)
 
+def outformat(output_array)
+  str = String.new
+  output_array.each do |e|
+    str += e ? e : '_'
+  end
+  str
+end
+
 i = 0
 while output.include? false do
   md5 = Digest::MD5.new
@@ -17,8 +25,10 @@ while output.include? false do
         next
       end
       output[pos.to_i] = md5.hexdigest[6]
-      puts "#{output.join} - #{pos} - #{hexdigest[5..6]}"
+      print "#{outformat(output)}\b\b\b\b\b\b\b\b"
     end
   end
   i += 1
 end
+
+puts "#{outformat(output)}. Got it!"
