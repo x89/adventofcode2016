@@ -21,7 +21,7 @@ lines.each do |line|
 end
 
 frequency_array.each do |h|
-  print h.sort_by{|k,v|v}.to_a[-1][0]
+  print h.sort_by{|k,v|-v}.to_a[-1][0]
 end
 
 puts
